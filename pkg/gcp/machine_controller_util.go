@@ -75,6 +75,9 @@ func (ms *MachinePlugin) CreateMachineUtil(ctx context.Context, machineName stri
 				OnHostMaintenance: providerSpec.Scheduling.OnHostMaintenance,
 				Preemptible:       providerSpec.Scheduling.Preemptible,
 			},
+			ShieldedInstanceConfig: &compute.ShieldedInstanceConfig{
+				EnableSecureBoot: true,
+			},
 			Tags: &compute.Tags{
 				Items: providerSpec.Tags,
 			},
@@ -153,6 +156,9 @@ func (ms *MachinePlugin) CreateMachineUtil(ctx context.Context, machineName stri
 		if len(nic.Subnetwork) != 0 {
 			computeNIC.Subnetwork = fmt.Sprintf("regions/%s/subnetworks/%s", providerSpec.Region, nic.Subnetwork)
 		}
+
+		computeNIC.StackType = "IPV4_IPV6"
+
 		networkInterfaces = append(networkInterfaces, computeNIC)
 	}
 	instance.NetworkInterfaces = networkInterfaces
